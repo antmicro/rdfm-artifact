@@ -22,6 +22,7 @@ import (
 	"path/filepath"
 
 	"github.com/antmicro/rdfm-artifact/artifact"
+	"github.com/balena-os/librsync-go"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 )
@@ -218,6 +219,64 @@ func modifyExisting(c *cli.Context, image VPImage) error {
 	err = modifyPayloadAttributes(c, image)
 	if err != nil {
 		return err
+	}
+
+	err = deltaCompress(c, image)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func deltaCompress(c *cli.Context, image VPImage) error {
+	art, isArt := image.(*ModImageArtifact)
+
+	if c.IsSet("delta-compress") {
+		if !isArt {
+			return errors.New("`--delta-compress` argument must be used with an Artifact")
+		}
+		updateFiles := art.unpackedArtifact.writeArgs.Updates.Updates[0].GetUpdateFiles()
+		for i, deltaSig := range c.StringSlice("delta-compress") {
+			if i >= len(art.unpackedArtifact.files) {
+				break
+			}
+			signature, err := librsync.ReadSignatureFile(deltaSig)
+			if err != nil {
+				return err
+			}
+
+			newfilename := art.unpackedArtifact.files[i]
+			newfile, err := os.Open(newfilename)
+			if err != nil {
+				return err
+			}
+			defer newfile.Close()
+
+			fileInfo, err := newfile.Stat()
+			if err != nil {
+				return err
+			}
+
+			// Hacky: the file name for delta signature is some-file-name.1048576.delta,
+			// where 1048576 is the original image size.  Artifact installer needs to know
+			// the original size for some of its checks.
+			deltafilename := fmt.Sprintf("%s.%d.delta", newfilename, fileInfo.Size())
+			deltafile, err := os.OpenFile(deltafilename, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+			if err != nil {
+				return err
+			}
+
+			librsync.Delta(signature, newfile, deltafile)
+			err = deltafile.Close()
+			if err != nil {
+				return err
+			}
+
+			art.unpackedArtifact.files[i] = deltafilename
+			updateFiles[i].Name = deltafilename
+			art.unpackedArtifact.keepChecksum = true
+		}
 	}
 
 	return nil

@@ -464,6 +464,10 @@ func getCliContext() *cli.App {
 			Usage: "Full path to the public verification key that is used by the client " +
 				"to verify the artifact.",
 		},
+		cli.StringSliceFlag{
+			Name:  "delta-compress",
+			Usage: "Path to delta signature of base image for delta compression",
+		},
 		cli.StringFlag{
 			Name:  "artifact-name, n",
 			Usage: "Name of the artifact",

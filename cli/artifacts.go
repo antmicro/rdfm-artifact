@@ -34,6 +34,7 @@ type unpackedArtifact struct {
 	ar        *areader.Reader
 	scripts   []string
 	files     []string
+	keepChecksum bool
 
 	// Args needed to reconstruct the artifact
 	writeArgs *awriter.WriteArtifactArgs
@@ -335,7 +336,7 @@ func repack(comp artifact.Compressor, ua *unpackedArtifact, to io.Writer, key []
 	_, hasChecksumProvide := ua.writeArgs.TypeInfoV3.ArtifactProvides["rootfs-image.checksum"]
 	// for rootfs-images: Update legacy rootfs_image_checksum provide if there is one.
 	_, hasLegacyChecksumProvide := ua.writeArgs.TypeInfoV3.ArtifactProvides["rootfs_image_checksum"]
-	if ua.writeArgs.TypeInfoV3.Type == "rootfs-image" && (hasChecksumProvide || hasLegacyChecksumProvide) {
+	if !ua.keepChecksum && ua.writeArgs.TypeInfoV3.Type == "rootfs-image" && (hasChecksumProvide || hasLegacyChecksumProvide) {
 		if len(ua.files) != 1 {
 			return errors.New("Only rootfs-image Artifacts with one file are supported")
 		}
