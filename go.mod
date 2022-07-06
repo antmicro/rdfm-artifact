@@ -3,6 +3,7 @@ module github.com/antmicro/rdfm-artifact
 go 1.14
 
 require (
+	github.com/balena-os/librsync-go v0.6.1
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/klauspost/compress v1.10.5 // indirect
 	github.com/klauspost/pgzip v1.2.5
@@ -13,7 +14,7 @@ require (
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/remyoudompheng/go-liblzma v0.0.0-20190301141425-da7c45f32144
-	github.com/sirupsen/logrus v0.0.0-20180315010703-90150a8ed11b
+	github.com/sirupsen/logrus v1.3.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli v1.22.5
 	golang.org/x/crypto v0.0.0-20191117063200-497ca9f6d64f // indirect
