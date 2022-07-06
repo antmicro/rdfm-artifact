@@ -18,7 +18,7 @@ import (
 	"archive/tar"
 	"io"
 
-	"github.com/mendersoftware/mender-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/artifact"
 	"github.com/pkg/errors"
 )
 

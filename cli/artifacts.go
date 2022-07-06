@@ -20,10 +20,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mendersoftware/mender-artifact/areader"
-	"github.com/mendersoftware/mender-artifact/artifact"
-	"github.com/mendersoftware/mender-artifact/awriter"
-	"github.com/mendersoftware/mender-artifact/handlers"
+	"github.com/antmicro/rdfm-artifact/areader"
+	"github.com/antmicro/rdfm-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/awriter"
+	"github.com/antmicro/rdfm-artifact/handlers"
 
 	"github.com/pkg/errors"
 )
@@ -137,7 +137,7 @@ func unpackArtifact(name string) (ua *unpackedArtifact, err error) {
 	aReader := areader.NewReader(f)
 	ua.ar = aReader
 
-	tmpdir, err := ioutil.TempDir("", "mender-artifact")
+	tmpdir, err := ioutil.TempDir("", "rdfm-artifact")
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +349,7 @@ func repack(comp artifact.Compressor, ua *unpackedArtifact, to io.Writer, key []
 }
 
 func repackArtifact(comp artifact.Compressor, key []byte, ua *unpackedArtifact) error {
-	tmp, err := ioutil.TempFile(filepath.Dir(ua.origPath), "mender-artifact")
+	tmp, err := ioutil.TempFile(filepath.Dir(ua.origPath), "rdfm-artifact")
 	if err != nil {
 		return err
 	}

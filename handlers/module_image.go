@@ -20,7 +20,7 @@ import (
 	"io"
 	"path/filepath"
 
-	"github.com/mendersoftware/mender-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/artifact"
 	"github.com/pkg/errors"
 )
 

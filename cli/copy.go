@@ -292,7 +292,7 @@ func parseCLIOptions(c *cli.Context) int {
 // current file, with the permissions given by perm.
 func createTmpFileWithPerm(f *os.File, perm os.FileMode) (string, error) {
 
-	td, err := ioutil.TempDir("", "mender-artifact-install")
+	td, err := ioutil.TempDir("", "rdfm-artifact-install")
 	if err != nil {
 		return "", err
 	}

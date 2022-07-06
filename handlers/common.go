@@ -23,7 +23,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/mendersoftware/mender-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/artifact"
 	"github.com/pkg/errors"
 )
 

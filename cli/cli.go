@@ -19,7 +19,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mendersoftware/mender-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/artifact"
 
 	"github.com/urfave/cli"
 )
@@ -45,7 +45,7 @@ const (
 	softwareFilesystemFlag       = "software-filesystem"
 )
 
-// Version of the mender-artifact CLI tool
+// Version of the rdfm-artifact CLI tool
 var Version = "unknown"
 
 // LatestFormatVersion is the latest version of the format, which is
@@ -99,9 +99,9 @@ func Run(args []string) error {
 
 func getCliContext() *cli.App {
 	app := cli.NewApp()
-	app.Name = "mender-artifact"
+	app.Name = "rdfm-artifact"
 	app.Usage = "interface for manipulating Mender artifacts"
-	app.UsageText = "mender-artifact [--version][--help] <command> [<args>]"
+	app.UsageText = "rdfm-artifact [--version][--help] <command> [<args>]"
 	app.Version = Version
 
 	app.Author = "Northern.tech AS"
@@ -388,7 +388,7 @@ func getCliContext() *cli.App {
 		Usage:       "Validates artifact file.",
 		Category:    "Artifact creation and validation",
 		Action:      validateArtifact,
-		UsageText:   "mender-artifact validate [options] <pathspec>",
+		UsageText:   "rdfm-artifact validate [options] <pathspec>",
 		Description: "This command validates artifact file provided by pathspec.",
 		Flags:       []cli.Flag{publicKeyFlag},
 	}
@@ -421,7 +421,7 @@ func getCliContext() *cli.App {
 		Usage:       "Signs existing artifact file.",
 		Category:    "Artifact modification",
 		Action:      signExisting,
-		UsageText:   "mender-artifact sign [options] <pathspec>",
+		UsageText:   "rdfm-artifact sign [options] <pathspec>",
 		Description: "This command signs artifact file provided by pathspec.",
 	}
 	sign.Flags = []cli.Flag{
@@ -445,7 +445,7 @@ func getCliContext() *cli.App {
 		Usage:       "Modifies image or artifact file.",
 		Category:    "Artifact modification",
 		Action:      modifyArtifact,
-		UsageText:   "mender-artifact modify [options] <pathspec>",
+		UsageText:   "rdfm-artifact modify [options] <pathspec>",
 		Description: "This command modifies existing image or artifact file provided by pathspec. NOTE: Currently only ext4 payloads can be modified",
 	}
 

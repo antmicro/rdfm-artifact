@@ -21,8 +21,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/mendersoftware/mender-artifact/areader"
-	"github.com/mendersoftware/mender-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/areader"
+	"github.com/antmicro/rdfm-artifact/artifact"
 	"github.com/urfave/cli"
 )
 

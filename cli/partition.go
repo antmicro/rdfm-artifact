@@ -27,9 +27,9 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/mendersoftware/mender-artifact/areader"
-	"github.com/mendersoftware/mender-artifact/artifact"
-	"github.com/mendersoftware/mender-artifact/utils"
+	"github.com/antmicro/rdfm-artifact/areader"
+	"github.com/antmicro/rdfm-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/utils"
 	"github.com/pkg/errors"
 )
 
@@ -43,7 +43,7 @@ const (
 	virtualImage vImage = 1
 )
 
-var errFsTypeUnsupported = errors.New("mender-artifact can only modify ext4 and vfat payloads")
+var errFsTypeUnsupported = errors.New("rdfm-artifact can only modify ext4 and vfat payloads")
 var errBlkidNotFound = errors.New("`blkid` binary not found on the system")
 
 type VPImage interface {

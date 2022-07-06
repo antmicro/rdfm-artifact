@@ -1,6 +1,6 @@
-#compdef _mender-artifact mender-artifact
+#compdef _rdfm-artifact rdfm-artifact
 
-_mender-artifact() {
+_rdfm-artifact() {
 
   local -a opts
   local cur
@@ -20,4 +20,4 @@ _mender-artifact() {
   return
 }
 
-compdef _mender-artifact mender-artifact
+compdef _rdfm-artifact rdfm-artifact

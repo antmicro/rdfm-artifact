@@ -30,12 +30,12 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/mendersoftware/mender-artifact/artifact"
-	"github.com/mendersoftware/mender-artifact/artifact/stage"
-	"github.com/mendersoftware/mender-artifact/awriter"
-	"github.com/mendersoftware/mender-artifact/cli/util"
-	"github.com/mendersoftware/mender-artifact/handlers"
-	"github.com/mendersoftware/mender-artifact/utils"
+	"github.com/antmicro/rdfm-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/artifact/stage"
+	"github.com/antmicro/rdfm-artifact/awriter"
+	"github.com/antmicro/rdfm-artifact/cli/util"
+	"github.com/antmicro/rdfm-artifact/handlers"
+	"github.com/antmicro/rdfm-artifact/utils"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 )
@@ -138,7 +138,7 @@ func writeRootfs(c *cli.Context) error {
 	}
 
 	// set the default name
-	name := "artifact.mender"
+	name := "artifact.rdfm"
 	if len(c.String("output-path")) > 0 {
 		name = c.String("output-path")
 	}
@@ -573,7 +573,7 @@ func writeModuleImage(ctx *cli.Context) error {
 	}
 
 	// set the default name
-	name := "artifact.mender"
+	name := "artifact.rdfm"
 	if len(ctx.String("output-path")) > 0 {
 		name = ctx.String("output-path")
 	}

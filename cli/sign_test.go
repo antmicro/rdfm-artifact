@@ -51,30 +51,30 @@ func TestSignExistingV2(t *testing.T) {
 		})
 	assert.NoError(t, err)
 
-	err = Run([]string{"mender-artifact", "sign",
+	err = Run([]string{"rdfm-artifact", "sign",
 		"-k", filepath.Join(updateTestDir, "private.key"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender.sig"),
-		filepath.Join(updateTestDir, "artifact.mender")})
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"),
+		filepath.Join(updateTestDir, "artifact.rdfm")})
 	assert.NoError(t, err)
 
-	err = Run([]string{"mender-artifact", "validate",
+	err = Run([]string{"rdfm-artifact", "validate",
 		"-k", filepath.Join(updateTestDir, "public.key"),
-		filepath.Join(updateTestDir, "artifact.mender.sig")})
+		filepath.Join(updateTestDir, "artifact.rdfm.sig")})
 	assert.NoError(t, err)
 
 	// now check if signing already signed will fail
-	err = Run([]string{"mender-artifact", "sign",
+	err = Run([]string{"rdfm-artifact", "sign",
 		"-k", filepath.Join(updateTestDir, "private.key"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender.sig"),
-		filepath.Join(updateTestDir, "artifact.mender.sig")})
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"),
+		filepath.Join(updateTestDir, "artifact.rdfm.sig")})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "Artifact already signed")
 
 	// and the same as above with force option
-	err = Run([]string{"mender-artifact", "sign",
+	err = Run([]string{"rdfm-artifact", "sign",
 		"-k", filepath.Join(updateTestDir, "private.key"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender.sig"), "-f",
-		filepath.Join(updateTestDir, "artifact.mender.sig")})
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"), "-f",
+		filepath.Join(updateTestDir, "artifact.rdfm.sig")})
 	assert.NoError(t, err)
 }
 
@@ -116,30 +116,30 @@ func TestSignExistingWithScripts(t *testing.T) {
 	assert.NoError(t, err)
 
 	// write artifact
-	err = Run([]string{"mender-artifact", "write", "rootfs-image", "-t", "my-device",
+	err = Run([]string{"rdfm-artifact", "write", "rootfs-image", "-t", "my-device",
 		"-n", "mender-1.1", "-f", filepath.Join(updateTestDir, "update.ext4"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender"),
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm"),
 		"-s", filepath.Join(updateTestDir, "ArtifactInstall_Enter_99"),
 		"-s", filepath.Join(updateTestDir, "ArtifactInstall_Leave_01")})
 	assert.NoError(t, err)
 
 	// test sign exisiting
-	err = Run([]string{"mender-artifact", "sign",
-		"-k", "-o", filepath.Join(updateTestDir, "artifact.mender.sig"),
-		filepath.Join(updateTestDir, "artifact.mender")})
+	err = Run([]string{"rdfm-artifact", "sign",
+		"-k", "-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"),
+		filepath.Join(updateTestDir, "artifact.rdfm")})
 	assert.Error(t, err)
 
 	// test sign exisiting
-	err = Run([]string{"mender-artifact", "sign",
-		"-o", filepath.Join(updateTestDir, "artifact.mender.sig"),
-		filepath.Join(updateTestDir, "artifact.mender")})
+	err = Run([]string{"rdfm-artifact", "sign",
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"),
+		filepath.Join(updateTestDir, "artifact.rdfm")})
 	assert.Error(t, err)
 
 	// test sign exisiting
-	err = Run([]string{"mender-artifact", "sign",
+	err = Run([]string{"rdfm-artifact", "sign",
 		"-k", filepath.Join(updateTestDir, "private.key"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender.sig"),
-		filepath.Join(updateTestDir, "artifact.mender")})
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"),
+		filepath.Join(updateTestDir, "artifact.rdfm")})
 	assert.NoError(t, err)
 
 }
@@ -170,27 +170,27 @@ func TestSignExistingWithModules(t *testing.T) {
 			},
 		})
 
-	err = Run([]string{"mender-artifact", "write", "module-image", "-t", "my-device",
+	err = Run([]string{"rdfm-artifact", "write", "module-image", "-t", "my-device",
 		"-n", "mender-1.1", "-T", "custom-update-type",
 		"-f", filepath.Join(updateTestDir, "payload-file"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender")})
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm")})
 	assert.NoError(t, err)
 
-	err = Run([]string{"mender-artifact", "sign",
+	err = Run([]string{"rdfm-artifact", "sign",
 		"-k", filepath.Join(updateTestDir, "private.key"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender.sig"),
-		filepath.Join(updateTestDir, "artifact.mender")})
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"),
+		filepath.Join(updateTestDir, "artifact.rdfm")})
 	assert.NoError(t, err)
 
-	err = Run([]string{"mender-artifact", "validate",
+	err = Run([]string{"rdfm-artifact", "validate",
 		"-k", filepath.Join(updateTestDir, "public.key"),
-		filepath.Join(updateTestDir, "artifact.mender.sig")})
+		filepath.Join(updateTestDir, "artifact.rdfm.sig")})
 	assert.NoError(t, err)
 
-	cmd := exec.Command("tar", "tvf", filepath.Join(updateTestDir, "artifact.mender"))
+	cmd := exec.Command("tar", "tvf", filepath.Join(updateTestDir, "artifact.rdfm"))
 	origTar, err := cmd.Output()
 	assert.NoError(t, err)
-	cmd = exec.Command("tar", "tvf", filepath.Join(updateTestDir, "artifact.mender.sig"))
+	cmd = exec.Command("tar", "tvf", filepath.Join(updateTestDir, "artifact.rdfm.sig"))
 	newTar, err := cmd.Output()
 	assert.NoError(t, err)
 
@@ -239,16 +239,16 @@ func TestSignExistingBrokenFiles(t *testing.T) {
 			},
 		})
 
-	err = Run([]string{"mender-artifact", "sign",
+	err = Run([]string{"rdfm-artifact", "sign",
 		"-k", filepath.Join(updateTestDir, "private.key"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender.sig"),
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"),
 		filepath.Join(updateTestDir, "empty-file")})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "Corrupt Artifact")
 
-	err = Run([]string{"mender-artifact", "sign",
+	err = Run([]string{"rdfm-artifact", "sign",
 		"-k", filepath.Join(updateTestDir, "private.key"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender.sig"),
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm.sig"),
 		filepath.Join(updateTestDir, "garbled-artifact")})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "Could not read tar header")

@@ -43,7 +43,7 @@ func TestCompressionArgumentLocations(t *testing.T) {
 	defer os.Remove(menderName)
 
 	// Default
-	err = app.Run([]string{"mender-artifact",
+	err = app.Run([]string{"rdfm-artifact",
 		"write",
 		"rootfs-image",
 		"-f", dummyName,
@@ -58,7 +58,7 @@ func TestCompressionArgumentLocations(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Global flag
-	err = app.Run([]string{"mender-artifact",
+	err = app.Run([]string{"rdfm-artifact",
 		"--compression", "lzma",
 		"write",
 		"rootfs-image",
@@ -74,7 +74,7 @@ func TestCompressionArgumentLocations(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Command flag
-	err = app.Run([]string{"mender-artifact",
+	err = app.Run([]string{"rdfm-artifact",
 		"write",
 		"rootfs-image",
 		"-f", dummyName,
@@ -90,7 +90,7 @@ func TestCompressionArgumentLocations(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Overriding with lzma
-	err = app.Run([]string{"mender-artifact",
+	err = app.Run([]string{"rdfm-artifact",
 		"--compression", "gzip",
 		"write",
 		"rootfs-image",
@@ -107,7 +107,7 @@ func TestCompressionArgumentLocations(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Overriding with gz
-	err = app.Run([]string{"mender-artifact",
+	err = app.Run([]string{"rdfm-artifact",
 		"--compression", "lzma",
 		"write",
 		"rootfs-image",
@@ -124,7 +124,7 @@ func TestCompressionArgumentLocations(t *testing.T) {
 	assert.NoError(t, err)
 
 	// write module-image now requires 'device-type' to be set
-	assert.Error(t, app.Run([]string{"mender-artifact",
+	assert.Error(t, app.Run([]string{"rdfm-artifact",
 		"write",
 		"module-image",
 		"-T", "script",
@@ -144,7 +144,7 @@ func TestModuleImageWithoutPayload(t *testing.T) {
 	defer os.Remove(menderName)
 
 	// Default
-	err = app.Run([]string{"mender-artifact",
+	err = app.Run([]string{"rdfm-artifact",
 		"write",
 		"module-image",
 		"-t", "dummy",

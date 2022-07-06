@@ -8,16 +8,16 @@ set -e
 touch rootfs.ext4
 
 ########## Step 0 - Help text produced #########
-mender-artifact write | diff ma-write-help-text.golden -
+rdfm-artifact write | diff ma-write-help-text.golden -
 
 ########## Step 1 - Write an Artifact  ##########
-mender-artifact write rootfs-image -t beaglebone -n release-1 -f rootfs.ext4 -o artifact.mender
+rdfm-artifact write rootfs-image -t beaglebone -n release-1 -f rootfs.ext4 -o artifact.rdfm
 
 ########## Step 2 - Verify an Artifact ##########
-mender-artifact validate artifact.mender > /dev/null
+rdfm-artifact validate artifact.rdfm > /dev/null
 
 ########## Step 3 - Read an Artifact   ##########
-mender-artifact read artifact.mender | diff --ignore-matching-lines='modified:.*' ma-read-output.golden -
+rdfm-artifact read artifact.rdfm | diff --ignore-matching-lines='modified:.*' ma-read-output.golden -
 
 ########## Step 4 - Clean up           ##########
-rm rootfs.ext4 artifact.mender
+rm rootfs.ext4 artifact.rdfm

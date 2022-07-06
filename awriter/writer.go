@@ -23,9 +23,9 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/mendersoftware/mender-artifact/artifact"
-	"github.com/mendersoftware/mender-artifact/artifact/stage"
-	"github.com/mendersoftware/mender-artifact/handlers"
+	"github.com/antmicro/rdfm-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/artifact/stage"
+	"github.com/antmicro/rdfm-artifact/handlers"
 	"github.com/pkg/errors"
 )
 

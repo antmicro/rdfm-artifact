@@ -28,9 +28,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/mendersoftware/mender-artifact/artifact"
-	"github.com/mendersoftware/mender-artifact/handlers"
-	"github.com/mendersoftware/mender-artifact/utils"
+	"github.com/antmicro/rdfm-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/handlers"
+	"github.com/antmicro/rdfm-artifact/utils"
 )
 
 type SignatureVerifyFn func(message, sig []byte) error
@@ -818,7 +818,7 @@ func getUpdateNoFromManifestPath(path string) (int, string, error) {
 
 func (ar *Reader) readHeaderUpdate(tr *tar.Reader, hdr *tar.Header, augmented bool) error {
 	for {
-		// Skip pure directories. mender-artifact doesn't create them,
+		// Skip pure directories. rdfm-artifact doesn't create them,
 		// but they may exist if another tool was used to create the
 		// artifact.
 		if hdr.Typeflag != tar.TypeDir {

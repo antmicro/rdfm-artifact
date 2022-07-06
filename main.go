@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mendersoftware/mender-artifact/cli"
+	"github.com/antmicro/rdfm-artifact/cli"
 )
 
 func run() error {

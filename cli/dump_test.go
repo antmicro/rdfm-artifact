@@ -114,8 +114,8 @@ func testDumpContent(t *testing.T, imageType, printCmdline string) {
 	// fields that aren't typically in rootfs-images. One of these is
 	// meta-data, which we don't use at the time of writing this, but which
 	// may be used later.
-	err = getCliContext().Run([]string{"mender-artifact", "write", "module-image",
-		"-o", path.Join(tmpdir, "artifact.mender"),
+	err = getCliContext().Run([]string{"rdfm-artifact", "write", "module-image",
+		"-o", path.Join(tmpdir, "artifact.rdfm"),
 		"-n", "Name",
 		"-t", "TestDevice",
 		"-T", imageType,
@@ -130,12 +130,12 @@ func testDumpContent(t *testing.T, imageType, printCmdline string) {
 		"--no-default-software-version"})
 	require.NoError(t, err)
 
-	printed, err := runAndCollectStdout([]string{"mender-artifact", "dump",
+	printed, err := runAndCollectStdout([]string{"rdfm-artifact", "dump",
 		"--scripts", path.Join(tmpdir, "scripts"),
 		"--meta-data", path.Join(tmpdir, "meta"),
 		"--files", path.Join(tmpdir, "files"),
 		printCmdline,
-		path.Join(tmpdir, "artifact.mender")})
+		path.Join(tmpdir, "artifact.rdfm")})
 
 	assert.NoError(t, err)
 	assert.Equal(t, strings.ReplaceAll(fmt.Sprintf(
@@ -174,8 +174,8 @@ func testDumpContent(t *testing.T, imageType, printCmdline string) {
 	os.RemoveAll(path.Join(tmpdir, "meta"))
 	os.RemoveAll(path.Join(tmpdir, "files"))
 
-	err = getCliContext().Run([]string{"mender-artifact", "write", "module-image",
-		"-o", path.Join(tmpdir, "artifact.mender"),
+	err = getCliContext().Run([]string{"rdfm-artifact", "write", "module-image",
+		"-o", path.Join(tmpdir, "artifact.rdfm"),
 		"-n", "Name",
 		"-t", "TestDevice",
 		"-t", "TestDevice2",
@@ -197,12 +197,12 @@ func testDumpContent(t *testing.T, imageType, printCmdline string) {
 		"-G", "dependsGroup2"})
 	require.NoError(t, err)
 
-	printed, err = runAndCollectStdout([]string{"mender-artifact", "dump",
+	printed, err = runAndCollectStdout([]string{"rdfm-artifact", "dump",
 		"--scripts", path.Join(tmpdir, "scripts"),
 		"--meta-data", path.Join(tmpdir, "meta"),
 		"--files", path.Join(tmpdir, "files"),
 		printCmdline,
-		path.Join(tmpdir, "artifact.mender")})
+		path.Join(tmpdir, "artifact.rdfm")})
 
 	assert.NoError(t, err)
 	printedStr := string(printed)

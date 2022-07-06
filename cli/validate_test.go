@@ -100,19 +100,19 @@ func TestArtifactsValidate(t *testing.T) {
 	err := WriteArtifact(updateTestDir, 2, "")
 	assert.NoError(t, err)
 
-	err = Run([]string{"mender-artifact", "validate",
-		filepath.Join(updateTestDir, "artifact.mender")})
+	err = Run([]string{"rdfm-artifact", "validate",
+		filepath.Join(updateTestDir, "artifact.rdfm")})
 	assert.NoError(t, err)
 }
 
 func TestArtifactsValidateError(t *testing.T) {
-	err := Run([]string{"mender-artifact", "validate"})
+	err := Run([]string{"rdfm-artifact", "validate"})
 	assert.Error(t, err)
 	assert.Contains(t, errors.Cause(err).Error(),
 		"Nothing specified, nothing validated.")
 
 	fakeErrWriter.Reset()
-	err = Run([]string{"mender-artifact", "validate", "non-existing"})
+	err = Run([]string{"rdfm-artifact", "validate", "non-existing"})
 	assert.Error(t, err)
 	assert.Equal(t, errArtifactOpen, lastExitCode)
 	assert.Contains(t, fakeErrWriter.String(), "no such file")

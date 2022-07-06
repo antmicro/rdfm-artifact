@@ -19,7 +19,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mendersoftware/mender-artifact/awriter"
+	"github.com/antmicro/rdfm-artifact/awriter"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 )
@@ -46,7 +46,7 @@ func signExisting(c *cli.Context) error {
 		outputFile = c.String("output-path")
 	}
 
-	tFile, err := ioutil.TempFile(filepath.Dir(outputFile), "mender-artifact")
+	tFile, err := ioutil.TempFile(filepath.Dir(outputFile), "rdfm-artifact")
 	if err != nil {
 		err = errors.Wrap(err, "Can not create temporary file for storing artifact")
 		cli.NewExitError(err, 1)

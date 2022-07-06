@@ -139,7 +139,7 @@ func TestModifyImage(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "modify",
+		"rdfm-artifact", "modify",
 		filepath.Join(tmp, "mender_test.img"),
 		"-n", "release-1"})
 	assert.NoError(t, err)
@@ -148,7 +148,7 @@ func TestModifyImage(t *testing.T) {
 		"/etc/mender/artifact_info", "artifact_name=release-1"))
 
 	err = Run([]string{
-		"mender-artifact", "modify",
+		"rdfm-artifact", "modify",
 		filepath.Join(tmp, "mender_test.img"),
 		"-u", "https://docker.mender.io"})
 	assert.NoError(t, err)
@@ -157,7 +157,7 @@ func TestModifyImage(t *testing.T) {
 		"/etc/mender/mender.conf", "https://docker.mender.io"))
 
 	err = Run([]string{
-		"mender-artifact", "modify",
+		"rdfm-artifact", "modify",
 		filepath.Join(tmp, "mender_test.sdimg"),
 		"--server-uri", "foo",
 		"--tenant-token", "bar"})
@@ -182,13 +182,13 @@ func TestModifySdimage(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "modify",
+		"rdfm-artifact", "modify",
 		filepath.Join(tmp, "mender_test.sdimg"),
 		"-n", "mender-test"})
 	assert.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "modify",
+		"rdfm-artifact", "modify",
 		filepath.Join(tmp, "mender_test.sdimg"),
 		"-u", "https://docker.mender.io"})
 	assert.NoError(t, err)
@@ -196,7 +196,7 @@ func TestModifySdimage(t *testing.T) {
 }
 
 func modifyAndRead(t *testing.T, artFile string, args ...string) string {
-	argv := []string{"mender-artifact", "modify"}
+	argv := []string{"rdfm-artifact", "modify"}
 	argv = append(argv, args...)
 	argv = append(argv, artFile)
 	err := Run(argv)
@@ -212,7 +212,7 @@ func modifyAndRead(t *testing.T, artFile string, args ...string) string {
 	goErr := make(chan error)
 
 	go func() {
-		err := Run([]string{"mender-artifact", "read", artFile})
+		err := Run([]string{"rdfm-artifact", "read", artFile})
 		w.Close()
 		goErr <- err
 	}()
@@ -237,7 +237,7 @@ func TestModifyRootfsArtifact(t *testing.T) {
 		err = WriteArtifact(tmp, ver, filepath.Join(tmp, "mender_test.img"))
 		assert.NoError(t, err)
 
-		data := modifyAndRead(t, filepath.Join(tmp, "artifact.mender"), "-n", "release-1")
+		data := modifyAndRead(t, filepath.Join(tmp, "artifact.rdfm"), "-n", "release-1")
 		assert.Contains(t, data, "Name: release-1")
 	}
 }
@@ -255,7 +255,7 @@ func TestModifyRootfsServerCert(t *testing.T) {
 	fakeErrWriter.Reset()
 
 	err = Run([]string{
-		"mender-artifact", "modify",
+		"rdfm-artifact", "modify",
 		"-c", "non-existing",
 		filepath.Join(tmp, "mender_test.img")})
 	assert.Error(t, err)
@@ -266,7 +266,7 @@ func TestModifyRootfsServerCert(t *testing.T) {
 	defer os.Remove(tmpCert.Name())
 
 	err = Run([]string{
-		"mender-artifact", "modify",
+		"rdfm-artifact", "modify",
 		"-c", tmpCert.Name(),
 		filepath.Join(tmp, "mender_test.img")})
 	assert.NoError(t, err)
@@ -296,7 +296,7 @@ yOTl4wVLQKA6mFvMV9o8B9yTBNg3mQS0vA==
 -----END EC PRIVATE KEY-----`
 )
 
-// Remove entries from 'mender-artifact read' that are always changing and
+// Remove entries from 'rdfm-artifact read' that are always changing and
 // therefore cannot be compared.
 func removeVolatileEntries(input string) string {
 	var output strings.Builder
@@ -330,14 +330,14 @@ func TestModifyRootfsSigned(t *testing.T) {
 
 		// Create and sign artifact using RSA private key.
 		err = Run([]string{
-			"mender-artifact", "write", "rootfs-image", "-t", "my-device",
+			"rdfm-artifact", "write", "rootfs-image", "-t", "my-device",
 			"-n", "release-1", "-f", filepath.Join(tmp, "mender_test.img"),
-			"-o", filepath.Join(tmp, "artifact.mender"),
+			"-o", filepath.Join(tmp, "artifact.rdfm"),
 			"-k", filepath.Join(tmp, key)})
 		assert.NoError(t, err)
 
 		// Modify the artifact, the result shall be unsigned
-		data := modifyAndRead(t, filepath.Join(tmp, "artifact.mender"), "-n", "release-2")
+		data := modifyAndRead(t, filepath.Join(tmp, "artifact.rdfm"), "-n", "release-2")
 		expected := `Mender artifact:
   Name: release-2
   Format: mender
@@ -365,7 +365,7 @@ Updates:
 		assert.Equal(t, expected, removeVolatileEntries(data))
 
 		// Modify again with a private key, and the result shall be signed
-		data = modifyAndRead(t, filepath.Join(tmp, "artifact.mender"),
+		data = modifyAndRead(t, filepath.Join(tmp, "artifact.rdfm"),
 			"-n", "release-3", "-k", filepath.Join(tmp, key))
 		expected = `Mender artifact:
   Name: release-3
@@ -402,18 +402,18 @@ Updates:
 	require.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "write",
+		"rdfm-artifact", "write",
 		"rootfs-image",
 		"-t", "my-device",
 		"-n", "release-1",
 		"-f", filepath.Join(tmp, "mender_test.img"),
-		"-o", filepath.Join(tmp, "artifact.mender"),
+		"-o", filepath.Join(tmp, "artifact.rdfm"),
 		"-s", filepath.Join(tmp, "ArtifactInstall_Enter_00"),
 		"-s", filepath.Join(tmp, "ArtifactCommit_Leave_00"),
 	})
 	assert.NoError(t, err)
 
-	data := modifyAndRead(t, filepath.Join(tmp, "artifact.mender"),
+	data := modifyAndRead(t, filepath.Join(tmp, "artifact.rdfm"),
 		"-n", "release-2")
 
 	// State scripts can unfortunately be in any order.
@@ -473,7 +473,7 @@ func TestModifyModuleArtifact(t *testing.T) {
 	tmpdir, err := ioutil.TempDir("", "mendertest")
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpdir)
-	artfile := filepath.Join(tmpdir, "artifact.mender")
+	artfile := filepath.Join(tmpdir, "artifact.rdfm")
 
 	err = ioutil.WriteFile(filepath.Join(tmpdir, "updateFile"), []byte("updateContent"), 0644)
 	require.NoError(t, err)
@@ -482,7 +482,7 @@ func TestModifyModuleArtifact(t *testing.T) {
 	require.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "write", "module-image",
+		"rdfm-artifact", "write", "module-image",
 		"-o", artfile,
 		"-n", "testName",
 		"-t", "testDevice",
@@ -524,7 +524,7 @@ Updates:
 
 	// The rest of modifications shall not work
 	err = Run([]string{
-		"mender-artifact", "modify", "-u", "dummy-uri", artfile,
+		"rdfm-artifact", "modify", "-u", "dummy-uri", artfile,
 	})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), errFsTypeUnsupported.Error())
@@ -532,7 +532,7 @@ Updates:
 	require.NoError(t, ioutil.WriteFile("dummy-cert", []byte("SecretCert"), 0644))
 	defer os.Remove("dummy-cert")
 	err = Run([]string{
-		"mender-artifact", "modify", "-c", "dummy-cert", artfile,
+		"rdfm-artifact", "modify", "-c", "dummy-cert", artfile,
 	})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), errFsTypeUnsupported.Error())
@@ -540,13 +540,13 @@ Updates:
 	require.NoError(t, ioutil.WriteFile("dummy-key", []byte("SecretKey"), 0644))
 	defer os.Remove("dummy-key")
 	err = Run([]string{
-		"mender-artifact", "modify", "-v", "dummy-key", artfile,
+		"rdfm-artifact", "modify", "-v", "dummy-key", artfile,
 	})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), errFsTypeUnsupported.Error())
 
 	err = Run([]string{
-		"mender-artifact", "modify", "-t", "dummy-token", artfile,
+		"rdfm-artifact", "modify", "-t", "dummy-token", artfile,
 	})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), errFsTypeUnsupported.Error())
@@ -561,7 +561,7 @@ Updates:
 	require.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "write", "module-image",
+		"rdfm-artifact", "write", "module-image",
 		"-o", artfile,
 		"-n", "testName",
 		"-t", "testDevice",
@@ -640,12 +640,12 @@ func TestModifyBrokenArtifact(t *testing.T) {
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpdir)
 
-	artFile := filepath.Join(tmpdir, "artifact.mender")
+	artFile := filepath.Join(tmpdir, "artifact.rdfm")
 	err = ioutil.WriteFile(artFile, []byte("bogus content"), 0644)
 	require.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "modify",
+		"rdfm-artifact", "modify",
 		"-n", "release-1",
 		artFile})
 	require.Error(t, err)
@@ -656,7 +656,7 @@ func TestModifyExtraAttributes(t *testing.T) {
 	tmpdir, err := ioutil.TempDir("", "mendertest")
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpdir)
-	artfile := filepath.Join(tmpdir, "artifact.mender")
+	artfile := filepath.Join(tmpdir, "artifact.rdfm")
 
 	err = ioutil.WriteFile(filepath.Join(tmpdir, "updateFile"), []byte("updateContent"), 0644)
 	require.NoError(t, err)
@@ -665,7 +665,7 @@ func TestModifyExtraAttributes(t *testing.T) {
 	require.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "write", "module-image",
+		"rdfm-artifact", "write", "module-image",
 		"-o", artfile,
 		"-n", "testName",
 		"-t", "testDevice",
@@ -792,7 +792,7 @@ func TestModifyExtraAttributesOnNonArtifact(t *testing.T) {
 }
 
 func testModifyExtraAttributesOnNonArtifact(t *testing.T, art string, p []string) {
-	err := Run([]string{"mender-artifact", "modify", p[0], p[1], art})
+	err := Run([]string{"rdfm-artifact", "modify", p[0], p[1], art})
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "must be used with an Artifact")
 }
@@ -801,10 +801,10 @@ func TestModifyClearsProvides(t *testing.T) {
 	tmpdir, err := ioutil.TempDir("", "mendertest")
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpdir)
-	artfile := filepath.Join(tmpdir, "artifact.mender")
+	artfile := filepath.Join(tmpdir, "artifact.rdfm")
 
 	err = Run([]string{
-		"mender-artifact", "write", "module-image",
+		"rdfm-artifact", "write", "module-image",
 		"-o", artfile,
 		"-n", "testName",
 		"-t", "testDevice",
@@ -861,13 +861,13 @@ func TestModifyNoProvides(t *testing.T) {
 	tmpdir, err := ioutil.TempDir("", "mendertest")
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpdir)
-	artfile := filepath.Join(tmpdir, "artifact.mender")
+	artfile := filepath.Join(tmpdir, "artifact.rdfm")
 
 	err = ioutil.WriteFile(filepath.Join(tmpdir, "updateFile"), []byte("updateContent"), 0644)
 	require.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "write", "rootfs-image",
+		"rdfm-artifact", "write", "rootfs-image",
 		"-o", artfile,
 		"-n", "testName",
 		"-t", "testDevice",
@@ -921,13 +921,13 @@ func TestModifyCompression(t *testing.T) {
 	tmpdir, err := ioutil.TempDir("", "mendertest")
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpdir)
-	artfile := filepath.Join(tmpdir, "artifact.mender")
+	artfile := filepath.Join(tmpdir, "artifact.rdfm")
 
 	err = ioutil.WriteFile(filepath.Join(tmpdir, "updateFile"), []byte("updateContent"), 0644)
 	require.NoError(t, err)
 
 	err = Run([]string{
-		"mender-artifact", "write", "rootfs-image",
+		"rdfm-artifact", "write", "rootfs-image",
 		"-o", artfile,
 		"-n", "testName",
 		"-t", "testDevice",

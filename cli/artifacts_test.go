@@ -32,9 +32,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli"
 
-	"github.com/mendersoftware/mender-artifact/artifact"
-	"github.com/mendersoftware/mender-artifact/awriter"
-	"github.com/mendersoftware/mender-artifact/handlers"
+	"github.com/antmicro/rdfm-artifact/artifact"
+	"github.com/antmicro/rdfm-artifact/awriter"
+	"github.com/antmicro/rdfm-artifact/handlers"
 )
 
 var (
@@ -128,7 +128,7 @@ func WriteArtifact(dir string, ver int, update string) error {
 		return err
 	}
 
-	f, err := os.Create(filepath.Join(dir, "artifact.mender"))
+	f, err := os.Create(filepath.Join(dir, "artifact.rdfm"))
 	if err != nil {
 		return err
 	}
@@ -248,66 +248,66 @@ func TestArtifactsSigned(t *testing.T) {
 	assert.NoError(t, err)
 
 	// invalid private key
-	args := []string{"mender-artifact", "write", "rootfs-image", "-t", "my-device",
+	args := []string{"rdfm-artifact", "write", "rootfs-image", "-t", "my-device",
 		"-n", "mender-1.1", "-f", filepath.Join(updateTestDir, "update.ext4"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender"),
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm"),
 		"-k", "non-existing-private.key"}
 	err = Run(args)
 	assert.Error(t, err)
 	assert.Contains(t, errors.Cause(err).Error(), "Error reading key file")
 
 	// store named file
-	args = []string{"mender-artifact", "write", "rootfs-image", "-t", "my-device",
+	args = []string{"rdfm-artifact", "write", "rootfs-image", "-t", "my-device",
 		"-n", "mender-1.1", "-f", filepath.Join(updateTestDir, "update.ext4"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender"),
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm"),
 		"-k", filepath.Join(updateTestDir, "private.key")}
 	err = Run(args)
 	assert.NoError(t, err)
-	fs, err := os.Stat(filepath.Join(updateTestDir, "artifact.mender"))
+	fs, err := os.Stat(filepath.Join(updateTestDir, "artifact.rdfm"))
 	assert.NoError(t, err)
 	assert.False(t, fs.IsDir())
 
 	// read
-	args = []string{"mender-artifact", "read",
+	args = []string{"rdfm-artifact", "read",
 		"-k", filepath.Join(updateTestDir, "public.key"),
-		filepath.Join(updateTestDir, "artifact.mender")}
+		filepath.Join(updateTestDir, "artifact.rdfm")}
 	err = Run(args)
 	assert.NoError(t, err)
 
 	// read invalid key
-	args = []string{"mender-artifact", "read",
+	args = []string{"rdfm-artifact", "read",
 		"-k", filepath.Join(updateTestDir, "private.key"),
-		filepath.Join(updateTestDir, "artifact.mender")}
+		filepath.Join(updateTestDir, "artifact.rdfm")}
 	err = Run(args)
 	assert.NoError(t, err)
 
 	// read non-existing key
-	args = []string{"mender-artifact", "read",
+	args = []string{"rdfm-artifact", "read",
 		"-k", "non-existing-public.key",
-		filepath.Join(updateTestDir, "artifact.mender")}
+		filepath.Join(updateTestDir, "artifact.rdfm")}
 	err = Run(args)
 	assert.Error(t, err)
 	assert.Contains(t, errors.Cause(err).Error(), "Error reading key file")
 
 	// validate
-	args = []string{"mender-artifact", "validate",
+	args = []string{"rdfm-artifact", "validate",
 		"-k", filepath.Join(updateTestDir, "public.key"),
-		filepath.Join(updateTestDir, "artifact.mender")}
+		filepath.Join(updateTestDir, "artifact.rdfm")}
 	err = Run(args)
 	assert.NoError(t, err)
 
 	// validate non-existing key
-	args = []string{"mender-artifact", "validate",
+	args = []string{"rdfm-artifact", "validate",
 		"-k", "non-existing-public.key",
-		filepath.Join(updateTestDir, "artifact.mender")}
+		filepath.Join(updateTestDir, "artifact.rdfm")}
 	err = Run(args)
 	assert.Error(t, err)
 	assert.Contains(t, errors.Cause(err).Error(), "Error reading key file")
 
 	// invalid version
-	args = []string{"mender-artifact", "write", "rootfs-image", "-t", "my-device",
+	args = []string{"rdfm-artifact", "write", "rootfs-image", "-t", "my-device",
 		"-n", "mender-1.1", "-f", filepath.Join(updateTestDir, "update.ext4"),
-		"-o", filepath.Join(updateTestDir, "artifact.mender"),
+		"-o", filepath.Join(updateTestDir, "artifact.rdfm"),
 		"-k", filepath.Join(updateTestDir, "private.key"),
 		"-v", "1"}
 	fakeErrWriter.Reset()

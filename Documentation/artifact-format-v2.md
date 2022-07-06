@@ -1,7 +1,7 @@
 Mender artifact file format
 ===========================
 
-File extension: `.mender`
+File extension: `.rdfm`
 
 The tree below describes the layout of files inside the main file, which is
 hosted inside a standard tar archive.
@@ -13,7 +13,7 @@ in the "Ordering" section.
 ### version 2
 
 ```
--artifact.mender (tar format)
+-artifact.rdfm (tar format)
   |
   +---version
   |
@@ -291,7 +291,7 @@ file:
 
 | File/Directory            | Ordering rule                  |
 |---------------------------|--------------------------------|
-| `version`                 | First in `.mender` tar archive |
+| `version`                 | First in `.rdfm` tar archive   |
 | `manifest`                | After `version`                |
 | `manifest.sig`            | Optional after `manifest`      |
 | `header.tar.gz`           | After all manifest files       |
@@ -323,7 +323,7 @@ whether signatures are enabled for example, it is better to group these together
 in one indivisible unit which is the `header.tar.gz` file, rather than being
 "surprised" by a signature file that arrives after the data file. All this is
 not a problem as long as the mender tool is used to manipulate the
-`artifact.mender` file, but if anyone does a custom modification using regular
+`artifact.rdfm` file, but if anyone does a custom modification using regular
 tar, this is important.
 
 

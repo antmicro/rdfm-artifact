@@ -4,7 +4,7 @@ V ?=
 PREFIX ?= /usr/local
 PKGS = $(shell go list ./... | grep -v vendor)
 SUBPKGS = $(shell go list ./... | sed '1d' | tr '\n' ',' | sed 's/,$$//1')
-PKGNAME = mender-artifact
+PKGNAME = rdfm-artifact
 PKGFILES = $(shell find . \( -path ./vendor -o -path ./Godeps \) -prune \
 		-o -type f -name '*.go' -print)
 PKGFILES_notest = $(shell echo $(PKGFILES) | tr ' ' '\n' | grep -v _test.go)
@@ -22,7 +22,7 @@ TOOLS = \
 VERSION = $(shell git describe --tags --dirty --exact-match 2>/dev/null || git rev-parse --short HEAD)
 
 GO_LDFLAGS = \
-	-ldflags "-X github.com/mendersoftware/mender-artifact/cli.Version=$(VERSION)"
+	-ldflags "-X github.com/antmicro/rdfm-artifact/cli.Version=$(VERSION)"
 
 ifeq ($(V),1)
 BUILDV = -v
@@ -42,7 +42,7 @@ build:
 
 PLATFORMS := darwin linux windows
 
-GO_LDFLAGS_WIN = -ldflags "-X github.com/mendersoftware/mender-artifact/cli.Version=$(VERSION) -linkmode=internal -s -w -extldflags '-static' -extld=x86_64-w64-mingw32-gcc"
+GO_LDFLAGS_WIN = -ldflags "-X github.com/antmicro/rdfm-artifact/cli.Version=$(VERSION) -linkmode=internal -s -w -extldflags '-static' -extld=x86_64-w64-mingw32-gcc"
 
 build-natives:
 	@arch="amd64";
@@ -57,15 +57,15 @@ build-natives:
 		$(GO) build $(GO_LDFLAGS_WIN) $(BUILDV) -tags $(TAGS) nolzma -o $(PKGNAME)-windows.exe ;
 
 build-contained:
-	rm -f mender-artifact && \
+	rm -f rdfm-artifact && \
 	image_id=$$(docker build -f Dockerfile . | awk '/Successfully built/{print $$NF;}') && \
-	docker run --rm --entrypoint "/bin/sh" -v $(shell pwd):/binary $$image_id -c "cp /go/bin/mender-artifact /binary" && \
+	docker run --rm --entrypoint "/bin/sh" -v $(shell pwd):/binary $$image_id -c "cp /go/bin/rdfm-artifact /binary" && \
 	docker image rm $$image_id
 
 build-natives-contained:
-	rm -f mender-artifact && \
+	rm -f rdfm-artifact && \
 	image_id=$$(docker build -f Dockerfile.binaries . | awk '/Successfully built/{print $$NF;}') && \
-	docker run --rm --entrypoint "/bin/sh" -v $(shell pwd):/binary $$image_id -c "cp /go/bin/mender-artifact* /binary" && \
+	docker run --rm --entrypoint "/bin/sh" -v $(shell pwd):/binary $$image_id -c "cp /go/bin/rdfm-artifact* /binary" && \
 	docker image rm $$image_id
 
 install:
@@ -73,16 +73,16 @@ install:
 
 install-autocomplete-scripts:
 	@echo "Installing Bash auto-complete script into $(DESTDIR)/etc/bash_completion.d/"
-	@install -Dm0644 ./autocomplete/bash_autocomplete $(DESTDIR)/etc/bash_completion.d/mender-artifact
+	@install -Dm0644 ./autocomplete/bash_autocomplete $(DESTDIR)/etc/bash_completion.d/rdfm-artifact
 	@if which zsh >/dev/null 2>&1 ; then \
 		echo "Installing zsh auto-complete script into $(DESTDIR)$(PREFIX)/share/zsh/site-functions/" && \
-		install -Dm0644 ./autocomplete/zsh_autocomplete $(DESTDIR)$(PREFIX)/share/zsh/site-functions/_mender-artifact \
+		install -Dm0644 ./autocomplete/zsh_autocomplete $(DESTDIR)$(PREFIX)/share/zsh/site-functions/_rdfm-artifact \
 	; fi
 
 
 clean:
 	$(GO) clean
-	rm -f mender-artifact-darwin mender-artifact-linux mender-artifact-windows.exe
+	rm -f rdfm-artifact-darwin rdfm-artifact-linux rdfm-artifact-windows.exe
 	rm -f coverage.txt coverage-tmp.txt
 
 get-tools:
@@ -125,7 +125,7 @@ htmlcover: coverage
 
 instrument-binary:
 	git apply patches/0001-Instrument-with-coverage.patch
-	gobinarycoverage github.com/mendersoftware/mender-artifact
+	gobinarycoverage github.com/antmicro/rdfm-artifact
 
 coverage:
 	rm -f coverage.txt

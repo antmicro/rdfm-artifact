@@ -36,17 +36,17 @@ func TestArtifactsRead(t *testing.T) {
 	err := WriteArtifact(updateTestDir, 2, "")
 	assert.NoError(t, err)
 
-	err = Run([]string{"mender-artifact", "read"})
+	err = Run([]string{"rdfm-artifact", "read"})
 	assert.Error(t, err)
 	assert.Contains(t, errors.Cause(err).Error(),
 		"Nothing specified, nothing read.")
 
-	err = Run([]string{"mender-artifact", "read",
-		filepath.Join(updateTestDir, "artifact.mender")})
+	err = Run([]string{"rdfm-artifact", "read",
+		filepath.Join(updateTestDir, "artifact.rdfm")})
 	assert.NoError(t, err)
 
 	fakeErrWriter.Reset()
-	err = Run([]string{"mender-artifact", "validate", "non-existing"})
+	err = Run([]string{"rdfm-artifact", "validate", "non-existing"})
 	assert.Error(t, err)
 	assert.Equal(t, errArtifactOpen, lastExitCode)
 	assert.Contains(t, fakeErrWriter.String(), "no such file")
@@ -58,7 +58,7 @@ func TestReadArtifactOutput(t *testing.T) {
 	tmpdir, err := ioutil.TempDir("", "mendertest")
 	require.NoError(t, err)
 	defer os.RemoveAll(tmpdir)
-	artfile := filepath.Join(tmpdir, "artifact.mender")
+	artfile := filepath.Join(tmpdir, "artifact.rdfm")
 
 	files := map[string]string{
 		"meta-data":         "{\"metadata\": \"test\"}",
@@ -74,7 +74,7 @@ func TestReadArtifactOutput(t *testing.T) {
 	}
 
 	args := []string{
-		"mender-artifact", "write", "module-image",
+		"rdfm-artifact", "write", "module-image",
 		"-o", artfile,
 		"-n", "testName",
 		"-t", "testDevice",
@@ -151,7 +151,7 @@ Updates:
 	checkMenderArtifactRead(t, tmpdir, artfile, expectedRegex, cliContext)
 
 	args = []string{
-		"mender-artifact", "write", "rootfs-image",
+		"rdfm-artifact", "write", "rootfs-image",
 		"-o", artfile,
 		"-n", "testName",
 		"-t", "testDevice",
@@ -203,7 +203,7 @@ func checkMenderArtifactRead(t *testing.T, tmpdir, artfile, expectedRegex string
 	require.NoError(t, err)
 	os.Stdout = outputFile
 
-	args := []string{"mender-artifact", "read", artfile}
+	args := []string{"rdfm-artifact", "read", artfile}
 	err = cliContext.Run(args)
 	assert.NoError(t, err)
 
