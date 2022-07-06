@@ -9,7 +9,7 @@ WORKDIR /go/src/github.com/antmicro/rdfm-artifact
 ADD ./ .
 RUN make build-natives
 
-FROM alpine:3.14.3
+FROM alpine:3.16.0
 RUN apk add xz-dev
 COPY --from=builder /go/src/github.com/antmicro/rdfm-artifact/rdfm-artifact* /go/bin/
 ENTRYPOINT [ "/go/bin/rdfm-artifact-linux" ]
