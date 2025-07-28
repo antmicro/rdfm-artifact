@@ -1,3 +1,6 @@
+> [!NOTE]
+> The contents of this repository have been moved to the [consolidated RDFM repository](https://github.com/antmicro/rdfm/tree/main/tools/rdfm-artifact).
+
 # rdfm-artifact - artifact creation tool for RDFM
 
 Copyright (c) 2023 [Antmicro](https://www.antmicro.com)
